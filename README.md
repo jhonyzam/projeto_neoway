@@ -1,7 +1,6 @@
 # Projeto Neoway
 ## Objetivo
-Ler o arquivo `base/base_test.txt` em GOLANG, efetuar as conversões de campos necessarios e inseri-lo no banco de dados PostgreSQL.
-One Paragraph of project description goes here
+Ler o arquivo `base/base_test.txt` em GOLANG, efetuar as conversões de campos necessarios e inseri-lo no banco de dados PostgreSQL
 
 ## Pré requisitos
 Possuir o docker instalado, com docker-compose, ou um ambiente com Golang e PostgreSQL
@@ -38,7 +37,7 @@ CREATE TABLE datastore(
 );
 ```
 ## Passo 3
-Execute os seguintes comandos no navegador ou num endpoint tester (Postman por exemplo)
+Execute os seguintes comandos no navegador ou num endpoint tester (Postman por exemplo):
 
 ##### Carregando base de dados:
 ``` <ip_adress_docker>:3000/datastore/execute ```
