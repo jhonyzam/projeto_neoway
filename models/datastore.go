@@ -30,7 +30,7 @@ type DataStore struct {
 }
 
 func AllDataStores(db *sql.DB) ([]*DataStore, error) {
-	rows, err := db.Query("SELECT cpf, private, incompleto, lastDate, avgTicket, lastTicket, StoreFrequent, StoreLast FROM datastore")
+	rows, err := db.Query("SELECT cpf, private, incompleto, lastDate, avgTicket, lastTicket, storeFrequent, storeLast FROM datastore")
 	if err != nil {
 		return nil, err
 	}
@@ -43,6 +43,7 @@ func AllDataStores(db *sql.DB) ([]*DataStore, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		dataStores = append(dataStores, ds)
 	}
 	if err = rows.Err(); err != nil {

@@ -1,0 +1,27 @@
+version: '3'
+services:
+  app:
+    build: .
+    container_name: "app"
+    command: ["go", "run", "main.go"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: "postgres"
+    environment:
+      - POSTGRES_DB=neoway
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=@postSenha123
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+
+volumes:
+  db-data:

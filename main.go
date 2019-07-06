@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"database/sql"
-	"datastore/models"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"projeto_neoway/models"
 )
 
 type ContextInjector struct {
@@ -20,7 +20,7 @@ func (ci *ContextInjector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	db, err := models.NewDB("postgres://crt:crt@flnsrvcorp2037/base_teste?sslmode=disable")
+	db, err := models.NewDB("postgres://postgres:@postSenha123@db/neoway?sslmode=disable")
 
 	if err != nil {
 		log.Panic(err)
@@ -54,15 +54,24 @@ func dataStoresIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, ds := range dataStores {
+	fmt.Fprintf(w, "%s", "[")
+
+	size := (len(dataStores) - 1)
+	for i, ds := range dataStores {
 		js, err := json.Marshal(ds)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		fmt.Fprintf(w, "%s\n", js)
+		if size == i {
+			fmt.Fprintf(w, "%s", js)
+		} else {
+			fmt.Fprintf(w, "%s,", js)
+		}
+
 	}
+	fmt.Fprintf(w, "%s", "]")
 }
 
 //Executa processo de extracão e inserção no BD
@@ -88,17 +97,19 @@ func dataStoresExecute(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Busca Arquivos do csv
-	dataStores := getBase()
-	
+	dataStores := models.GetBase()
+
 	//Insere registros
 	for _, ds := range dataStores {
-		valid := (IsCNPJ(ds.Cpf) || IsCPF(ds.Cpf))
+		valid := (models.IsCNPJ(ds.Cpf) || models.IsCPF(ds.Cpf))
 		if !valid {
 			fmt.Println("Código inválido: " + ds.Cpf)
 			continue
 		}
-		
-		clean(&ds.Cpf)
+
+		models.Clean(&ds.Cpf)
+		models.Clean(&ds.StoreFrequent)
+		models.Clean(&ds.StoreLast)
 		err2 := models.CreateDataStore(db, ds)
 
 		if err2 != nil {
